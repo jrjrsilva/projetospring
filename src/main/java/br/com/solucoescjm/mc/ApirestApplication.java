@@ -13,6 +13,7 @@ import br.com.solucoescjm.mc.domain.Cidade;
 import br.com.solucoescjm.mc.domain.Cliente;
 import br.com.solucoescjm.mc.domain.Endereco;
 import br.com.solucoescjm.mc.domain.Estado;
+import br.com.solucoescjm.mc.domain.ItemPedido;
 import br.com.solucoescjm.mc.domain.Pagamento;
 import br.com.solucoescjm.mc.domain.PagamentoComBoleto;
 import br.com.solucoescjm.mc.domain.PagamentoComCartao;
@@ -25,6 +26,7 @@ import br.com.solucoescjm.mc.repositories.CidadeRepository;
 import br.com.solucoescjm.mc.repositories.ClienteRepository;
 import br.com.solucoescjm.mc.repositories.EnderecoRepository;
 import br.com.solucoescjm.mc.repositories.EstadoRepository;
+import br.com.solucoescjm.mc.repositories.ItemPedidoRepository;
 import br.com.solucoescjm.mc.repositories.PagamentoRepository;
 import br.com.solucoescjm.mc.repositories.PedidoRepository;
 import br.com.solucoescjm.mc.repositories.ProdutoRepository;
@@ -55,6 +57,9 @@ public class ApirestApplication implements CommandLineRunner{
 	
 	@Autowired
 	private PagamentoRepository repoPagamento;
+	
+	@Autowired
+	private ItemPedidoRepository repoItemPedido;
 	
 	public static void main(String[] args) {
 		SpringApplication.run(ApirestApplication.class, args);
@@ -117,6 +122,20 @@ public class ApirestApplication implements CommandLineRunner{
 		  
 		  repoPedido.saveAll(Arrays.asList(ped1,ped2));
 		  repoPagamento.saveAll(Arrays.asList(pgto1,pgto2));
+		  
+		  
+		  ItemPedido  ip1 = new ItemPedido(ped1,p1,1,0.00,2000.00);
+		  ItemPedido  ip2 = new ItemPedido(ped1,p3,2,0.00,80.00);
+		  ItemPedido  ip3 = new ItemPedido(ped1,p2,1,0.00,800.00);
+		  
+		  ped1.getItens().addAll(Arrays.asList(ip1,ip2));
+		  ped2.getItens().addAll(Arrays.asList(ip3));
+		  
+		  p1.getItens().addAll(Arrays.asList(ip1));
+		  p2.getItens().addAll(Arrays.asList(ip3));
+		  p3.getItens().addAll(Arrays.asList(ip2));
+		  
+		  repoItemPedido.saveAll(Arrays.asList(ip1,ip2,ip3));
 	}
 
 }
