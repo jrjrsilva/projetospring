@@ -1,9 +1,15 @@
 package br.com.solucoescjm.mc.domain;
 
-import br.com.solucoescjm.mc.domain.enums.EstadoPagamento;
+import javax.persistence.Entity;
 
+import br.com.solucoescjm.mc.domain.enums.EstadoPagamento;
+@Entity
 public class PagamentoComCartao extends Pagamento{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Integer numeroDeParcelas;
 
 	public PagamentoComCartao() {

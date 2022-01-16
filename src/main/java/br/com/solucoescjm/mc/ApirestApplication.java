@@ -1,5 +1,6 @@
 package br.com.solucoescjm.mc;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,13 +13,20 @@ import br.com.solucoescjm.mc.domain.Cidade;
 import br.com.solucoescjm.mc.domain.Cliente;
 import br.com.solucoescjm.mc.domain.Endereco;
 import br.com.solucoescjm.mc.domain.Estado;
+import br.com.solucoescjm.mc.domain.Pagamento;
+import br.com.solucoescjm.mc.domain.PagamentoComBoleto;
+import br.com.solucoescjm.mc.domain.PagamentoComCartao;
+import br.com.solucoescjm.mc.domain.Pedido;
 import br.com.solucoescjm.mc.domain.Produto;
+import br.com.solucoescjm.mc.domain.enums.EstadoPagamento;
 import br.com.solucoescjm.mc.domain.enums.TipoCliente;
 import br.com.solucoescjm.mc.repositories.CategoriaRepository;
 import br.com.solucoescjm.mc.repositories.CidadeRepository;
 import br.com.solucoescjm.mc.repositories.ClienteRepository;
 import br.com.solucoescjm.mc.repositories.EnderecoRepository;
 import br.com.solucoescjm.mc.repositories.EstadoRepository;
+import br.com.solucoescjm.mc.repositories.PagamentoRepository;
+import br.com.solucoescjm.mc.repositories.PedidoRepository;
 import br.com.solucoescjm.mc.repositories.ProdutoRepository;
 
 @SpringBootApplication
@@ -41,6 +49,12 @@ public class ApirestApplication implements CommandLineRunner{
 
 	@Autowired
 	private EnderecoRepository repoEndereco;
+
+	@Autowired
+	private PedidoRepository repoPedido;
+	
+	@Autowired
+	private PagamentoRepository repoPagamento;
 	
 	public static void main(String[] args) {
 		SpringApplication.run(ApirestApplication.class, args);
@@ -89,6 +103,20 @@ public class ApirestApplication implements CommandLineRunner{
 		  
 		  repoCliente.saveAll(Arrays.asList(cli1));
 		  repoEndereco.saveAll(Arrays.asList(e1,e2));
+		  SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+		  Pedido ped1 = new Pedido(null,sdf.parse("16/01/2022 09:55"),cli1,e1);
+		  Pedido ped2 = new Pedido(null,sdf.parse("16/01/2022 10:55"),cli1,e2);
+		  
+		  Pagamento pgto1 = new PagamentoComCartao(null,EstadoPagamento.QUITADO,ped1,6);
+		  ped1.setPagamento(pgto1);
+		  
+		  Pagamento pgto2 = new PagamentoComBoleto(null, EstadoPagamento.PENDENTE, ped2, sdf.parse("20/02/2022 00:00"),null);
+		  ped2.setPagamento(pgto2);
+		  
+		  cli1.getPedidos().addAll(Arrays.asList(ped1,ped2));
+		  
+		  repoPedido.saveAll(Arrays.asList(ped1,ped2));
+		  repoPagamento.saveAll(Arrays.asList(pgto1,pgto2));
 	}
 
 }
